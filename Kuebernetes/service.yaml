@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: giovanimartins
+  name: demo-blue-green-svc
+  labels:
+    app: demo-bg
+    tier: app
+    version: v1
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+  selector:
+    app: demo-bg
+    tier: app
+    version: v2
