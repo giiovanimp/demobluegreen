@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: giiovanimp
+  name: demo-blue-green-dep
+  labels:
+    app: demo-bg
+    tier: app
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      app: demo-bg
+      tier: app
+      version: v1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo-bg
+        tier: app
+        version: v1
+    spec:
+      containers:
+        - name: demobg
+          image: giiovanimp/demobluegreen:v1
+          ports:
+            - name: http 
+              containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 100Mi
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
