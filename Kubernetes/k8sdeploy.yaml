@@ -50,10 +50,6 @@ kind: Service
 metadata:
   namespace: giiovanimp
   name: demo-blue-green-svc
-  labels:
-    app: demo-bg
-    tier: app
-    version: v1
 spec:
   type: LoadBalancer
   ports:
