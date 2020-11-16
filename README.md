@@ -54,9 +54,9 @@ EXPOSE 80
 
 ### Executando o container.
 
-Agora com o Dockerfile configurado, execute o Docker Desktop e aguarde até o icone indicar que o Docker está rodando.
+Agora com o Dockerfile configurado, execute o Docker Desktop e aguarde até o ícone indicar que o Docker está rodando.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerrunning.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerrunning.png?raw=true)
 
 Após a execução, abra um Prompt de comando na pasta do projeto para que possam ser executados os comandos Docker.
 
@@ -66,22 +66,22 @@ O comando completo ficará assim:
 ```
 docker build -t giiovanimp/demobluegreen:v1 .
 ```
-Com isso o Docker irá executar todos comandos listados na Dockerfile e exibirá na tela, caso tudo esteja certo indicará que gerou a build e a tag com sucesso.
+Com isso o Docker irá executar todos os comandos listados na Dockerfile e exibirá na tela, caso tudo esteja certo indicará que gerou a build e a tag com sucesso.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/successfullybuilt.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/successfullybuilt.png?raw=true)
 
 Com a imagem gerada podemos executar o container no docker localmente utilizando o comando **docker run**, para esse comando primeiramente indicamos o direcionamento de portas para acessar o container, nesse exemplo vamos utilizar a porta 8080 para referenciar a porta 80 do container, ficando assim **-p 8080:80**. Logo após indicamos o container que será executado juntamente com sua tag **giiovanimp/demobluegreen:v1**. O Comando completo ficará assim:
 ```
 docker run -p 8080:80 giiovanimp/demobluegreen:v1
 ```
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/containerrunning.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/containerrunning.png?raw=true)
 
 Após a confirmação de execução, podemos acessar localmente a aplicação indicando a porta configurada. Em um navegador acesse: http://localhost:8080/weatherforecast
 
 No caso dessa aplicação, ela retornará a previsão do tempo dos próximos 5 dias.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/localhostv1.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/localhostv1.png?raw=true)
 
 Para parar a execução do container, voltamos a linha de comando e listamos os containers em execução para ter acesso ao id do container.
 ```
@@ -95,7 +95,7 @@ Em caso de sucesso o Docker irá retornar o ID do container deletado.
 
 ### Publicando a imagem no DockerHub
 
-Agora que temos a imagem funcionando vamos enviar para o DockerHub. Para isso execute o comando **docker login** para caso não esteja, o docker logue em sua conta.
+Agora que temos a imagem funcionando vamos enviar para o DockerHub. Para isso execute o comando **docker login** para caso não esteja, o docker entre em sua conta.
 Após logado vamos fazer um **push** com a imagem gerada utilizando o comando:
 ```
 docker push giiovanimp/demobluegreen:v1
@@ -113,7 +113,7 @@ kubectl cluster-info
 Ele exibirá as URLs configuradas.
 
 Assim como Dockerfile, o Kubernetes também precisa de alguns arquivos de configuração para serem executados. Inicialmente criaremos um namespace e um contexto, para facilitar a separação da aplicação dos outros elementos padrões no Kubernetes.
-Para criar um Namespace, crie um arquivo [namespace.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kuebernetes/namespace.yaml). Nele definimos qual o tipo de elemento que estamos criando no **kind** e damos o nome dele dentro de **metadata**.
+Para criar um Namespace, crie um arquivo [namespace.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/namespace.yaml). Nele definimos qual o tipo de elemento que estamos criando no **kind** e damos o nome dele dentro de **metadata**.
 
 ```
 apiVersion: v1
@@ -121,7 +121,7 @@ kind: Namespace
 metadata:
   name: giiovanimp
 ```
-Lembrando que para um arquivo YAML a identação é primordial para a leitura correta do documento. Sendo definido 2 espaços para cada elemento filho.
+Lembrando que para um arquivo YAML a indentação é primordial para a leitura correta do documento. Sendo definido 2 espaços para cada elemento filho.
 
 Com o documento criado utilizaremos o comando **kubectl apply** para aplicar as configurações descritas no arquivo. Para isso esteja com o Prompt de Comando na pasta em que os arquivos foram criados para que possamos referenciar corretamente. Este comando será usado durante todas modificações e aplicações de YAML no Kubernetes.
 
@@ -148,11 +148,11 @@ kubectl get services
 ```
 Como ainda não publicamos nenhum deployment, é normal não exibir nenhum Pod. Igualmente os services onde temos apenas o serviço interno do Kubernetes publicado.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/getpodsservices.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/getpodsservices.png?raw=true)
 
-Para publicar a primeira versão da aplicação crie um arquivo chamado [deploymentv1.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kuebernetes/deploymentv1.yaml), nele faremos todas configurações necessárias para o nosso Deployment.
+Para publicar a primeira versão da aplicação crie um arquivo chamado [deploymentv1.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/deploymentv1.yaml), nele faremos todas configurações necessárias para o nosso Deployment.
 
-Inicialmente definimos qual tipo de elemento vamos aplicar, nesse caso, um Deployment, que será publicado no **namespace: giiovanimp** com o  nome **demo-blue-green-dep**. Aqui também é definida a label, classificação e versão da app, sendo **demo-bg**, **app"** na **v1**. Ficando assim:
+Inicialmente definimos qual tipo de elemento vamos aplicar, nesse caso, um Deployment, que será publicado no **namespace: giiovanimp** com o nome **demo-blue-green-dep**. Aqui também é definida a label, classificação e versão da app, sendo **demo-bg**, **app"** na **v1**. Ficando assim:
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -191,9 +191,9 @@ spec:
           resources: #Aqui é definido os recursos que cada pode irá exigir inicialmente. Podendo possuir limites também.
             requests:
               cpu: 10m #10 milicores equivalem a 10% de um Core, que possui 1000 milicores.
-              memory: 100Mi #100 MebiBytes, equivamente a 104,858 Megabytes
-          imagePullPolicy: IfNotPresent #A politica de busca da imagem. Neste caso, caso não já não exista.
-      restartPolicy: Always #Indica que o pod reiniciará sempre que algo der errado.
+              memory: 100Mi #100 MebiBytes, equivalente a 104,858 Megabytes
+          imagePullPolicy: IfNotPresent #A política de busca da imagem. Neste caso, caso não já não exista.
+      restartPolicy: Always #Indica que o Pod reiniciará sempre que algo der errado.
   strategy: #Estratégia de deploy.
     type: RollingUpdate #Neste caso Rolling Update, onde atualiza réplica a replica.
 ```
@@ -204,15 +204,15 @@ kubectl apply -f deploymentv1.yaml
 ```
 Com o deployment criado, ao executar o comando para recuperar os pods, pode-se visualizar a aplicação na lista.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applydeploymentv1.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applydeploymentv1.png?raw=true)
 
-Agora com o Pod já publicado no cluster é preciso criar um serviço, para isso crie um novo arquivo [service.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kuebernetes/service.yaml). Nele iremos definir um serviço externo que guiará para o pod publicado.
+Agora com o Pod já publicado no cluster é preciso criar um serviço, para isso crie um novo arquivo [service.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/service.yaml). Nele iremos definir um serviço externo que guiará para o Pod publicado.
 
 ```bash
 apiVersion: v1
 kind: Service #Agora utilizamos o tipo Service
 metadata:
-  namespace: giiovanimp #Também estará no mesmo namspace
+  namespace: giiovanimp #Também estará no mesmo namespace
   name: demo-blue-green-svc
 spec:
   type: LoadBalancer #Sendo do tipo balanceador de carga
@@ -230,8 +230,10 @@ kubectl apply -f service.yaml
 ```
 Ao recuperar os serviços pode-se observar o que acabamos de criar. Ele possui uma propriedade **EXTERNAL-IP**, esse IP que utilizaremos para acessar nossa aplicação.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applyservice.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applyservice.png?raw=true)
 
 Em um navegador acesse http://20.62.216.3/weatherforecast, substituindo o IP gerado no serviço.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/podv1.PNG?raw=true)
+![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/podv1.png?raw=true)
+
+É válido lembrar que todas essas configurações podem ser feitas em um único arquivo YAML, separando as definições com ***---***, assim como exemplificado no arquivo [k8sdeploy.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/k8sdeploy.yaml)
