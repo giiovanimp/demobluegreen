@@ -47,7 +47,7 @@ EXPOSE 80
 
 Execute o Docker Desktop e aguarde até o ícone indicar que o Docker está rodando.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerrunning.png?raw=true)
+![Docker Running](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerrunning.png?raw=true)
 
 Abra um Prompt de comando na pasta do projeto para que possam ser executados os comandos Docker.
 
@@ -59,20 +59,20 @@ docker build -t giiovanimp/demobluegreen:v1 .
 ```
 Com isso o Docker irá executar todos os comandos listados na Dockerfile e exibirá na tela. Caso tudo esteja certo indicará que gerou a build e a tag com sucesso.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/successfullybuilt.png?raw=true)
+![Successfully Built](https://github.com/giiovanimp/demobluegreen/blob/main/Images/successfullybuilt.png?raw=true)
 
 Com a imagem gerada execute o container no docker localmente utilizando o comando **"docker run"**, primeiramente indique o direcionamento de portas para acessar o container, nesse exemplo utilize a porta 8080 para referenciar a porta 80 do container, resultando em **"-p 8080:80"**. Logo após indique o container que será executado juntamente com sua tag **"giiovanimp/demobluegreen:v1"**. O Comando completo ficará assim:
 ```
 docker run -p 8080:80 giiovanimp/demobluegreen:v1
 ```
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/containerrunning.png?raw=true)
+![Container Running](https://github.com/giiovanimp/demobluegreen/blob/main/Images/containerrunning.png?raw=true)
 
 Após a confirmação de execução, acesse localmente a aplicação indicando a porta configurada. Em um navegador acesse: http://localhost:8080/weatherforecast
 
 No caso dessa aplicação, ela retornará a previsão do tempo dos próximos 5 dias.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/localhostv1.png?raw=true)
+![Localhost v1](https://github.com/giiovanimp/demobluegreen/blob/main/Images/localhostv1.png?raw=true)
 
 Para parar a execução do container, na linha de comando, liste os containers em execução para ter acesso ao id do container.
 ```
@@ -139,7 +139,7 @@ kubectl get services
 ```
 Como ainda não foi publicado nenhum deployment, é normal não exibir nenhum Pod. Igualmente os Services onde tem-se apenas o serviço interno do Kubernetes.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/getpodsservices.png?raw=true)
+![Get Pods e Services](https://github.com/giiovanimp/demobluegreen/blob/main/Images/getpodsservices.png?raw=true)
 
 Para publicar a primeira versão da aplicação crie um arquivo chamado [deploymentv1.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/deploymentv1.yaml), nele serão feitas todas configurações necessárias para o Deployment.
 
@@ -195,7 +195,7 @@ kubectl apply -f deploymentv1.yaml
 ```
 Ao executar o comando para recuperar os pods, pode-se visualizar a aplicação na lista.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applydeploymentv1.png?raw=true)
+![Apply Deployment v1](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applydeploymentv1.png?raw=true)
 
 Agora com o Pod já publicado no cluster é preciso criar um serviço que o acesse, para isso crie um novo arquivo [service.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/service.yaml). Nele é definido um serviço externo que guiará para o Pod publicado.
 
@@ -221,10 +221,67 @@ kubectl apply -f service.yaml
 ```
 Ao recuperar os serviços pode-se observar o que acabou de ser criado. Ele possui uma propriedade **"EXTERNAL-IP"**, esse IP que é utilizado para acessar a aplicação externamente.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applyservice.png?raw=true)
+![Apply Service](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applyservice.png?raw=true)
 
 Em um navegador acesse http://20.62.216.3/weatherforecast, substituindo o IP gerado no serviço.
 
-![alt text](https://github.com/giiovanimp/demobluegreen/blob/main/Images/podv1.png?raw=true)
+![Pod v1](https://github.com/giiovanimp/demobluegreen/blob/main/Images/podv1.png?raw=true)
 
 É válido lembrar que todas essas configurações podem ser feitas em um único arquivo YAML, separando as definições com ***"---"***, assim como exemplificado no arquivo [k8sdeploy.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/k8sdeploy.yaml).
+
+## Aplicando atualização Blue/Green
+### Gerando ambiente Green
+
+O Ambiente Green é a atualização da aplicação que atualmente está publicada (Blue). É necessário gerar uma nova imagem Docker, uma nova versão e publica-lá no Docker Hub. Portanto repita os passos do primeiro tópico mudando a versão da tag gerada.
+
+![Docker images](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerimagesv2.png?raw=true)
+
+Crie um novo arquivo [deploymentv2.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/dockerimagesv2.yaml) que será praticamente idêntico ao v1.
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: giiovanimp
+  name: demo-blue-green-v2 #Altere o nome do deployment para que seja criado um novo deployment da nova versão
+  labels:
+    app: demo-bg
+    tier: app
+    version: v2 #Altere a versão da app e todos lugares que a referenciam.
+...
+        spec:
+          containers:
+            - name: demobg
+              image: giiovanimp/demobluegreen:v2 #Altere a tag buscada no DockerHub
+```
+
+Aplique esse novo deployment como feito na primeira versão e observe que agora a lista de Pods contém os dois deployments. Sendo o primeiro o Blue e o segundo o Green.
+
+![Apply Deployment v2](https://github.com/giiovanimp/demobluegreen/blob/main/Images/applydeploymentv2.png?raw=true)
+
+Para a atualização Blue/Green altere o serviço que foi aplicado anteriormente, porém apontando para a nova versão no seletor.
+
+```bash
+...
+  selector:
+    app: demo-bg
+    tier: app
+    version: v2
+```
+
+Com isso o Kubernetes irá atualizar o serviço e passará a a direcionar as novas requisições para o novo ambiente. Note que isso poderá levar alguns minutos e requisições que começaram no ambiente antigo ficarão por lá até serem finalizadas, portanto é normal por alguns momentos obter respostas diferentes em diferentes dispositivos.
+
+Com a atualização a aplicação retorna somente um dia.
+
+![Pod v2](https://github.com/giiovanimp/demobluegreen/blob/main/Images/podv2.png?raw=true)
+
+Caso encontre algum problema na nova versão o serviço poderá ser alterado novamente retornando as chamadas para a primeira versão até que as correções necessárias sejam feitas. Caso tudo ocorra como planejado apague o deployment da primeira versão para que não fique conumindo recursos no Cluster sem necessidade. Para isso execute:
+
+```
+kubectl delete deployment demo-blue-green-dep
+```
+
+# Troubleshooting
+### Contexto não tem acesso ao Cluster
+
+Caso ao alterar para o novo contexto o kubectl exiba uma mensagem de "connection refused", verifique as configurações do arquivo **{user}/.kube/config** e certifique que o contexto criado está com o mesmo usuário e cluster configurados que os demais contextos.
