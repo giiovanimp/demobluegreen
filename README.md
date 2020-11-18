@@ -232,7 +232,7 @@ Em um navegador acesse http://20.62.216.3/weatherforecast, substituindo o IP ger
 ## Aplicando atualização Blue/Green
 ### Gerando ambiente Green
 
-O Ambiente Green é a atualização da aplicação que atualmente está publicada (Blue). É necessário gerar uma nova imagem Docker, uma nova versão e publica-lá no Docker Hub. Portanto repita os passos do primeiro tópico mudando a versão da tag gerada.
+O Ambiente Green é a atualização da aplicação que atualmente está publicada (Blue). É necessário gerar uma nova imagem Docker, uma nova versão e publica-la no Docker Hub. Portanto repita os passos do primeiro tópico mudando a versão da tag gerada.
 
 ![Docker images](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerimagesv2.png?raw=true)
 
@@ -243,7 +243,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: giiovanimp
-  name: demo-blue-green-v2 #Altere o nome do deployment para que seja criado um novo deployment da nova versão
+  name: demo-blue-green-v2 #Altere o nome do deployment para que seja criado um deployment da nova versão
   labels:
     app: demo-bg
     tier: app
@@ -269,13 +269,13 @@ Para a atualização Blue/Green altere o serviço que foi aplicado anteriormente
     version: v2
 ```
 
-Com isso o Kubernetes irá atualizar o serviço e passará a a direcionar as novas requisições para o novo ambiente. Note que isso poderá levar alguns minutos e requisições que começaram no ambiente antigo ficarão por lá até serem finalizadas, portanto é normal por alguns momentos obter respostas diferentes em diferentes dispositivos.
+Com isso o Kubernetes irá atualizar o serviço e passará a direcionar as novas requisições para o novo ambiente. Note que isso poderá levar alguns minutos e requisições que começaram no ambiente antigo ficarão por lá até serem finalizadas, portanto é normal por alguns momentos obter respostas diferentes em diferentes dispositivos.
 
 Com a atualização a aplicação retorna somente um dia.
 
 ![Pod v2](https://github.com/giiovanimp/demobluegreen/blob/main/Images/podv2.png?raw=true)
 
-Caso encontre algum problema na nova versão o serviço poderá ser alterado novamente retornando as chamadas para a primeira versão até que as correções necessárias sejam feitas. Caso tudo ocorra como planejado apague o deployment da primeira versão para que não fique conumindo recursos no Cluster sem necessidade. Para isso execute:
+Caso encontre algum problema na nova versão o serviço poderá ser alterado novamente retornando as chamadas para a primeira versão até que as correções necessárias sejam feitas. Caso tudo ocorra como planejado apague o deployment da primeira versão para que não fique consumindo recursos no Cluster sem necessidade. Para isso execute:
 
 ```
 kubectl delete deployment demo-blue-green-dep
