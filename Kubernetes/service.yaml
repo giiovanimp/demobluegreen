@@ -10,4 +10,4 @@ spec:
   selector:
     app: demo-bg
     tier: app
-    version: v1
+    version: v2
