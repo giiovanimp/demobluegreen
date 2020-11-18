@@ -236,7 +236,7 @@ O Ambiente Green é a atualização da aplicação que atualmente está publicad
 
 ![Docker images](https://github.com/giiovanimp/demobluegreen/blob/main/Images/dockerimagesv2.png?raw=true)
 
-Crie um novo arquivo [deploymentv2.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/dockerimagesv2.yaml) que será praticamente idêntico ao v1.
+Crie um novo arquivo [deploymentv2.yaml](https://github.com/giiovanimp/demobluegreen/blob/main/Kubernetes/dockerimagesv2.yaml) que será semelhante ao v1.
 
 ```bash
 apiVersion: apps/v1
