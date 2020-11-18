@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: giovanimartins
+  namespace: giiovanimp
   name: demo-blue-green-v2
   labels:
     app: demo-bg
